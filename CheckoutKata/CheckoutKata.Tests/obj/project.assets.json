@@ -973,6 +973,19 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "CheckoutKata/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/CheckoutKata.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CheckoutKata.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -3925,10 +3938,16 @@
         "system.xml.xdocument.4.0.11.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "CheckoutKata/1.0.0": {
+      "type": "project",
+      "path": "../CheckoutKata/CheckoutKata.csproj",
+      "msbuildProject": "../CheckoutKata/CheckoutKata.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "CheckoutKata >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 17.1.0",
       "NUnit >= 3.13.3",
       "NUnit.Analyzers >= 3.3.0",
@@ -3962,7 +3981,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Projects\\Dotnet\\MyCheckoutKata\\CheckoutKata\\CheckoutKata\\CheckoutKata.csproj": {
+              "projectPath": "C:\\Projects\\Dotnet\\MyCheckoutKata\\CheckoutKata\\CheckoutKata\\CheckoutKata.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

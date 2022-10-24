@@ -1,16 +1,23 @@
+using CheckoutKata.Services;
+
 namespace CheckoutKata.Tests
 {
-    public class Tests
+    public class CheckoutKataTest
     {
-        [SetUp]
-        public void Setup()
+        [TestCase("A", 50)]
+        [TestCase("B", 30)]
+        [TestCase("C", 20)]
+        [TestCase("D", 10)]
+        public void ScanItem_ShouldReturnTotalPrice(string item, int expectedPrice)
         {
-        }
+            //Arrange
+            var checkoutKata = new CheckoutKataService();
 
-        [Test]
-        public void Test1()
-        {
-            Assert.Pass();
+            //Act
+            checkoutKata.Scan(item);
+
+            //Assert
+            Assert.That(checkoutKata.GetTotalPrice(), Is.EqualTo(expectedPrice));
         }
     }
 }
