@@ -21,8 +21,10 @@ namespace CheckoutKata.Services
             {"B", new SpecialPrice { MinItemsToDiscount = 2, ReducedPrice = 45 } },
         };
 
-        public int GetTotalPrice(Dictionary<string, int> itemPricesDict, Dictionary<string, SpecialPrice>? specialPriceDict)
+        public int GetTotalPrice(Dictionary<string, int> itemPricesDict, Dictionary<string, SpecialPrice> specialPriceDict)
         {
+            CheckIfPricingRulesChanged(itemPricesDict, specialPriceDict);
+
             foreach (var item in _itemsAmountRegister)
             {
                 var itemName = item.Key;
@@ -48,6 +50,19 @@ namespace CheckoutKata.Services
             }
 
             return _totalPrice;
+        }
+
+        private void CheckIfPricingRulesChanged(Dictionary<string, int> newItemPrices, Dictionary<string, SpecialPrice> newSpecialPriceDict)
+        {
+            if (newItemPrices != null)
+            {
+                _itemsPriceDictionary = new Dictionary<string, int>(newItemPrices);
+            }
+
+            if (newSpecialPriceDict != null)
+            {
+                _specialPriceDictionary = new Dictionary<string, SpecialPrice>(newSpecialPriceDict);
+            }
         }
 
         public void Scan(string item)

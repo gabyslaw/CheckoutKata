@@ -1,3 +1,4 @@
+using CheckoutKata.Models;
 using CheckoutKata.Services;
 
 namespace CheckoutKata.Tests
@@ -30,16 +31,16 @@ namespace CheckoutKata.Tests
         public void ScanMultipleItems_ShouldReturnExpectedTotalPrice(string itemList, int expectedPrice)
         {
             //Arrange
-            var checkout = new Checkout();
+            var checkOutKata = new CheckoutKataService();
 
             //Act
             foreach (var item in itemList)
             {
-                checkout.Scan(item.ToString());
+                checkOutKata.Scan(item.ToString());
             }
 
             //Assert
-            Assert.That(checkout.GetTotalPrice(null, null), Is.EqualTo(expectedPrice));
+            Assert.That(checkOutKata.GetTotalPrice(null, null), Is.EqualTo(expectedPrice));
         }
 
         [TestCase("AAA", 130)]
@@ -62,6 +63,33 @@ namespace CheckoutKata.Tests
 
             //Assert
             Assert.That(checkoutKata.GetTotalPrice(null, null), Is.EqualTo(expectedPrice));
+        }
+
+        [TestCase("AABBB", 145)]
+        public void CalculateTotalPriceUsingNewPricingRules(string itemList, int expectedPrice)
+        {
+            //Arrange
+            var checkOutKata = new CheckoutKataService();
+            var newPricing = new Dictionary<string, int>
+            {
+                { "A", 60 },
+                { "B", 20 },
+            };
+
+            var newSpecialPricing = new Dictionary<string, SpecialPrice>
+            {
+                {"A", new SpecialPrice { MinItemsToDiscount = 2, ReducedPrice = 100 } },
+                {"B", new SpecialPrice { MinItemsToDiscount = 3, ReducedPrice = 45 } },
+            };
+
+            //Act
+            foreach (var item in itemList)
+            {
+                checkOutKata.Scan(item.ToString());
+            }
+
+            //Assert
+            Assert.That(checkOutKata.GetTotalPrice(newPricing, newSpecialPricing), Is.EqualTo(expectedPrice));
         }
     }
 }
