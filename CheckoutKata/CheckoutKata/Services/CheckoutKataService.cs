@@ -6,7 +6,7 @@ namespace CheckoutKata.Services
     {
 
         private int _totalPrice = 0;
-        private List<string> _scannedItems = new List<string>();
+        private Dictionary<string, int> _itemsAmountRegister = new Dictionary<string, int>();
         private Dictionary<string, int> _itemsPriceDictionary = new Dictionary<string, int>
         {
             { "A", 50 },
@@ -15,21 +15,52 @@ namespace CheckoutKata.Services
             { "D", 15 }
         };
 
-        public int GetTotalPrice(Dictionary<string, int>? itemPricesDict, Dictionary<string, SpecialPrice>? specialPriceDict)
+        private Dictionary<string, SpecialPrice> _specialPriceDictionary = new Dictionary<string, SpecialPrice>
         {
-            foreach (var item in _scannedItems)
+            {"A", new SpecialPrice { MinItemsToDiscount = 3, ReducedPrice = 130 } },
+            {"B", new SpecialPrice { MinItemsToDiscount = 2, ReducedPrice = 45 } },
+        };
+
+        public int GetTotalPrice(Dictionary<string, int> itemPricesDict, Dictionary<string, SpecialPrice>? specialPriceDict)
+        {
+            foreach (var item in _itemsAmountRegister)
             {
-                //get the value with the key specified
-                _itemsPriceDictionary.TryGetValue(item, out int itemPrice);
-                _totalPrice += itemPrice;
+                var itemName = item.Key;
+                var itemAmount = item.Value;
+
+                _itemsPriceDictionary.TryGetValue(itemName, out int regularItemPrice);
+                if (_specialPriceDictionary.TryGetValue(itemName, out SpecialPrice specialPrice))
+                {
+                    var multibuyReduced = 0;
+                    if (itemAmount >= specialPrice.MinItemsToDiscount)
+                    {
+                        multibuyReduced = itemAmount / specialPrice.MinItemsToDiscount;
+                    }
+
+                    var multibuyRegular = itemAmount % specialPrice.MinItemsToDiscount;
+
+                    _totalPrice += multibuyReduced * specialPrice.ReducedPrice + multibuyRegular * regularItemPrice;
+                }
+                else
+                {
+                    _totalPrice += itemAmount * regularItemPrice;
+                }
             }
+
             return _totalPrice;
         }
 
         public void Scan(string item)
         {
-            //add items to the dictionary
-            _scannedItems.Add(item);
+            //check if key exists before adding
+            if (!_itemsAmountRegister.ContainsKey(item))
+            {
+                _itemsAmountRegister.Add(item, 1);
+            }
+            else
+            {
+                _itemsAmountRegister[item]++;
+            }
         }
     }
 }
