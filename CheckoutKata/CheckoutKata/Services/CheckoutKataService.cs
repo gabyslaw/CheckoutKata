@@ -1,4 +1,6 @@
-﻿namespace CheckoutKata.Services
+﻿using CheckoutKata.Models;
+
+namespace CheckoutKata.Services
 {
     public class CheckoutKataService : ICheckoutKataService
     {
@@ -13,7 +15,7 @@
             { "D", 15 }
         };
 
-        public int GetTotalPrice()
+        public int GetTotalPrice(Dictionary<string, int>? itemPricesDict, Dictionary<string, SpecialPrice>? specialPriceDict)
         {
             foreach (var item in _scannedItems)
             {
